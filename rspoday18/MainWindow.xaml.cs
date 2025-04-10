@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using Excel = Microsoft.Office.Interop.Excel;
 namespace rspoday18
 {
     /// <summary>
@@ -31,6 +31,33 @@ namespace rspoday18
             CurrentHotels = JsonConvert.DeserializeObject<List<Hotel>>(response);
             DataContext = this;
 
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var application = new Excel.Application();
+            Excel.Workbook wb = application.Workbooks.Add(Type.Missing);
+            Excel.Worksheet worksheet = wb.Worksheets.Add(Type.Missing);
+            worksheet.Cells[1][1] = "Id";
+            worksheet.Cells[2][1] = "Name";
+            worksheet.Cells[3][1] = "CountOfStars";
+            worksheet.Cells[1][1].Font.Bold = worksheet.Cells[2][1].Font.Bold = worksheet.Cells[3][1].Font.Bold = true;
+            var client = new WebClient();
+            var response = client.DownloadString("http://localhost:59913/api/Hotels");
+            CurrentHotels = JsonConvert.DeserializeObject<List<Hotel>>(response);
+            int startRowIndex = 2;
+            foreach (var hotel in CurrentHotels)
+            {
+                worksheet.Cells[1][startRowIndex] = hotel.Id;
+                worksheet.Cells[2][startRowIndex] = hotel.Name;
+                worksheet.Cells[3][startRowIndex] = hotel.CountOfStars;
+                startRowIndex++;
+            }
+            worksheet.Columns.AutoFit();
+            application.Visible = true;
+            Excel.Range usedRange = worksheet.UsedRange;
+            usedRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            usedRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
         }
     }
 }

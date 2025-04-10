@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <DataGrid ItemsSource="{Binding CurrentHotels}">
+        <Button Content="Экспорт в Excel" Margin="10,10,10,400" Click="Button_Click"></Button>
+        <DataGrid ItemsSource="{Binding CurrentHotels}" Margin="0,39,0,0">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding id}" Header="id" Width="auto"></DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="auto"></DataGridTextColumn>
